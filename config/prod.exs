@@ -10,9 +10,16 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :discuss, DiscussWeb.Endpoint,
-  url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  load_from_system_env: true,
+  url: [scheme: "https", host: "cryptic-citadel-89398.herokuapp.com", port: 443],
+  force_ssl: [rewrite_on: :x_forwarded_proto],
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE")
 
+config :discuss, Discuss.Repo,
+       pool_size: 10,
+       ssl: true,
+       url: System.get_env("DATABASE_URL")
 # Do not print debug messages in production
 config :logger, level: :info
 
@@ -52,4 +59,4 @@ config :logger, level: :info
 
 # Finally import the config/prod.secret.exs which loads secrets
 # and configuration from environment variables.
-import_config "prod.secret.exs"
+#import_config "prod.secret.exs"
